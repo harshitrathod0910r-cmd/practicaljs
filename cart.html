@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Product Browser</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .controls input,
+        .controls select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+
+
+        #container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+
+        .card {
+            background: white;
+            width: 250px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+
+        }
+
+
+        .card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .card h3 {
+            margin: 10px 0 5px;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+
+        .card button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            background-color: #ff4d4d;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+
+        .edit-btn {
+            background-color: #4dff5c;
+            color: white;
+            margin-left: 10px;
+        }
+
+        .edit-btn:hover {
+            background-color: #23c63c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="controls">
+        <input type="text" id="search" placeholder="Search by name">
+        <select id="sort">
+            <option value="">Sort By</option>
+            <option value="low">Price: Low to High</option>
+            <option value="high">Price: High to Low</option>
+            <option value="az">Name: A to Z</option>
+            <option value="za">Name: Z to A</option>
+        </select>
+    </div>
+
+    <div id="container"></div>
+
+    <script>
+        let data = JSON.parse(localStorage.getItem("save")) || []
+        let container = document.getElementById("container")
+
+        function displayProducts(products) {
+            container.innerHTML = ""
+
+            products.forEach((el, i) => {
+
+                let div = document.createElement("div")
+                div.className = "card"
+
+                let img = document.createElement("img")
+                img.src = el.image
+
+                let name = document.createElement("h3")
+                name.innerText = el.name
+
+                let price = document.createElement("p")
+                price.innerText = "₹" + el.price
+                price.className = "price"
+
+                let btn = document.createElement("button")
+                btn.innerText = "Delete"
+                btn.className = "delete-btn"
+
+                btn.addEventListener("click", () => {
+                    deleteproduct(i)
+                })
+
+
+                let btn1 = document.createElement("button")
+                btn1.innerText = "edit"
+                btn1.className = "edit-btn"
+
+                btn1.addEventListener("click", () => {
+                    editproduct(i)
+                })
+
+
+                div.append(img, name, price, btn, btn1)
+                container.append(div)
+            })
+        }
+
+        displayProducts(data)
+
+        document.querySelector("#search").addEventListener("input", function () {
+            let value = this.value.toLowerCase()
+            let filtered = data.filter((el) => {
+                return el.name.toLowerCase().includes(value)
+            })
+            displayProducts(filtered)
+        })
+
+        document.querySelector("#sort").addEventListener("change", function () {
+            let value = this.value
+            let sorted = [...data]
+
+            if (value == "low") {
+                sorted.sort((a, b) => a.price - b.price)
+            } else if (value == "high") {
+                sorted.sort((a, b) => b.price - a.price)
+            } else if (value == "az") {
+                sorted.sort((a, b) => a.name.localeCompare(b.name))
+            } else if (value == "za") {
+                sorted.sort((a, b) => b.name.localeCompare(a.name))
+            }
+
+            displayProducts(sorted)
+        })
+
+        function deleteproduct(i) {
+            data.splice(i, 1)
+            localStorage.setItem("save", JSON.stringify(data))
+            displayProducts(data)
+        }
+
+        function editproduct(i) {
+
+    let newName = prompt("Enter new name:", data[i].name)
+    let newPrice = prompt("Enter new price:", data[i].price)
+    let newImage = prompt("Enter new image URL:", data[i].image)
+
+    if (newName !== null && newPrice !== null && newImage !== null) {
+
+        data[i].name = newName
+        data[i].price = Number(newPrice)
+        data[i].image = newImage
+
+        localStorage.setItem("save", JSON.stringify(data))
+        displayProducts(data)
+    }
+}
+
+
+
+
+    </script>
+
+</body>
+
+</html>

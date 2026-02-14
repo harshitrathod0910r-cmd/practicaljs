@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    #box {
+        border: 1px solid;
+        width: 20%;
+        height: 300px;
+        text-align: center;
+        margin-left: 40%;
+        margin-top: 15%;
+        background-color: white;
+
+    }
+
+    #name {
+        width: 90%;
+        height: 30px;
+        font-weight: bold;
+        font-size: large;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    #img {
+        width: 90%;
+        height: 30px;
+        font-weight: bold;
+        font-size: large;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    #price {
+        width: 90%;
+        height: 30px;
+        font-weight: bold;
+        font-size: large;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    #btn {
+        width: 60%;
+        height: 30px;
+        font-weight: bold;
+        font-size: large;
+        text-align: center;
+        margin-top: 10px;
+        color: white;
+        background-color:rgb(51, 51, 215);
+    }
+
+    #btn1 {
+        width: 60%;
+        height: 30px;
+        font-weight: bold;
+        font-size: large;
+        text-align: center;
+        margin-top: 10px;
+        color: white;
+        background-color: rgb(25, 156, 38);
+    }
+</style>
+
+<body>
+    <div id="box">
+        <h2>Add product</h2>
+
+        <form action="">
+            <input type="text" id="name" placeholder="enter prodcut name"><br>
+            <input type="text" id="img" placeholder="enter image url"><br>
+            <input type="text" id="price" placeholder="enter price"><br>
+            <input type="submit" id="btn1">
+            <button type="button" id="btn">show products</button>
+        </form>
+    </div>
+    <script>
+        let data = JSON.parse(localStorage.getItem("save")) || []
+        document.querySelector("form").addEventListener("submit", (e) => {
+            e.preventDefault()
+
+            let name = document.querySelector("#name").value
+            let image = document.querySelector("#img").value
+            let price = document.querySelector("#price").value
+
+            let obj = { name, image, price }
+
+            data.push(obj)
+
+            localStorage.setItem("save", JSON.stringify(data))
+            alert("succesfully")
+        
+            
+
+        })
+
+        document.querySelector("#btn").addEventListener("click", () => {
+            window.location.href = "cart.html"
+        })
+
+    </script>
+</body>
+
+</html>
